@@ -1,0 +1,34 @@
+import React, { useState } from "react";
+
+function NewMessage({ onAddMessage }) {
+  const [body, setBody] = useState("");
+  const username = "DemoUser";
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    fetch("http://127.0.0.1:5555/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, body }),
+    })
+      .then((r) => r.json())
+      .then((newMessage) => {
+        onAddMessage(newMessage);
+        setBody("");
+      });
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        placeholder="Write a message..."
+      />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+
+export default NewMessage;
